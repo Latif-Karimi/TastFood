@@ -128,11 +128,11 @@ export const Home = () => {
             </div>
           </div>
         </div>
-        <div className="container ">
+        <div>
           {foodCategory !== []
             ? foodCategory.map((data) => {
                 return (
-                  <div className="row mb-3">
+                  <div className="row">
                     <div key={data._id} className="fs-3 m-3">
                       {data.categoryName}
                     </div>
@@ -149,9 +149,9 @@ export const Home = () => {
                               className=" col-12 col-md-6 col-lg-3"
                             >
                               <Card
-                                foodName={filterItems.name}
+                                fooditem={filterItems}
                                 options={filterItems.options[0]}
-                                imgSrc={filterItems.img}
+                                
                               ></Card>
                             </div>
                           );
