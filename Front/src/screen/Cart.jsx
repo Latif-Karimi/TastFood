@@ -1,9 +1,6 @@
 import React from "react";
 import { useCart, useDispatchCart } from "../components/ContexReducer";
 
-
-
-
 export const Cart = () => {
   let data = useCart();
   let dispatch = useDispatchCart();
@@ -12,9 +9,29 @@ export const Cart = () => {
       <div>
         <div className="m-5 w-100 text-center fs-3">The Cart is Empty!</div>
       </div>
-    );
+    )
   }
-  let totalPrice = data.reduce((total, food) => total + food.price, 0);
+const hundleCheckOut = async()=>{
+  let userEmail = localStorage.getItem('userEmail')
+  let response = await fetch('http://localhost:3333/api/orderData',{
+    method:'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      order_data:data,
+      email:userEmail,
+      
+      order_date: new Date().toDateString()
+    })
+  });
+  console.log('respons:', response)
+  if(response.status===200){
+    dispatch({type:'DROP'}) 
+  }
+}
+
+  let totalPrice = data.reduce((total, food) => total + food.price, 0)
   return (
     <div>
       <div className="container m-auto mt-5 table-responsive table-responsive-sm table-responsive-md">
@@ -37,8 +54,18 @@ export const Cart = () => {
                 <th>{food.qty}</th>
                 <th>{food.size}</th>
                 <th>{food.price}</th>
-                <td><button type="button" className="btn p-0 text-danger" onClick={() => { dispatch({ type: "REMOVE", index: index }) }}>Delete</button></td>
-</tr>
+                <td>
+                  <button
+                    type="button"
+                    className="btn p-0 text-danger"
+                    onClick={() => {
+                      dispatch({ type: "REMOVE", index: index });
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -46,7 +73,7 @@ export const Cart = () => {
           <h1 className="fs-2">Total Price: $ {totalPrice}.00</h1>
         </div>
         <div>
-          <button className="btn bg-primary mt-5">Check Out</button>
+          <button className="btn bg-primary mt-5" onClick={hundleCheckOut}>Check Out</button>
         </div>
       </div>
     </div>
